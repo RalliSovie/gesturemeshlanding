@@ -332,6 +332,7 @@
       inset: 38px 34px 138px;
       display: grid;
       place-items: center;
+      perspective: 900px;
     }
 
     .mesh-node {
@@ -360,15 +361,19 @@
     }
 
     .demo-cube {
+      --cube-size: 146px;
+      --cube-half: calc(var(--cube-size) / 2);
       position: relative;
       z-index: 4;
-      width: 190px;
-      height: 190px;
+      width: var(--cube-size);
+      height: var(--cube-size);
+      transform-style: preserve-3d;
       animation: cubeFloat 4.8s ease-in-out infinite;
     }
 
     .cube-face {
       position: absolute;
+      inset: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
@@ -386,36 +391,18 @@
     }
 
     .cube-face.front {
-      left: 50%;
-      top: 50%;
-      width: 146px;
-      height: 146px;
-      transform: translate(-50%, -50%);
+      transform: translateZ(var(--cube-half));
       z-index: 3;
     }
 
     .cube-face.right {
-      left: calc(50% + 73px);
-      top: calc(50% - 73px);
-      width: 56px;
-      height: 146px;
-      grid-template-columns: 1fr;
-      grid-template-rows: repeat(3, 1fr);
-      transform: skewY(-35deg);
-      transform-origin: left bottom;
+      transform: rotateY(90deg) translateZ(var(--cube-half));
       z-index: 2;
       background: rgba(222, 243, 255, .86);
     }
 
     .cube-face.top {
-      left: calc(50% - 73px);
-      top: calc(50% - 129px);
-      width: 146px;
-      height: 56px;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: 1fr;
-      transform: skewX(-55deg);
-      transform-origin: right bottom;
+      transform: rotateX(90deg) translateZ(var(--cube-half));
       z-index: 1;
       background: rgba(238, 250, 255, .9);
     }
@@ -428,8 +415,8 @@
     }
 
     @keyframes cubeFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      0%, 100% { transform: translateY(0) rotateX(-24deg) rotateY(34deg); }
+      50% { transform: translateY(-10px) rotateX(-24deg) rotateY(34deg); }
     }
 
     @keyframes faceGlow {
@@ -469,11 +456,11 @@
       transform: translateY(-5px);
     }
 
-    .demo-arrow.up { --x: 0px; --y: -185px; --r: -90deg; --delay: 0s; }
-    .demo-arrow.right { --x: 188px; --y: -10px; --r: 0deg; --delay: .15s; }
-    .demo-arrow.down { --x: 0px; --y: 185px; --r: 90deg; --delay: .3s; }
-    .demo-arrow.left { --x: -188px; --y: -10px; --r: 180deg; --delay: .45s; }
-    .demo-arrow.diagonal { --x: 148px; --y: 150px; --r: 45deg; --delay: .6s; color: var(--orange); }
+    .demo-arrow.up { --x: 0px; --y: -208px; --r: -90deg; --delay: 0s; }
+    .demo-arrow.right { --x: 226px; --y: -18px; --r: 0deg; --delay: .15s; }
+    .demo-arrow.down { --x: 0px; --y: 208px; --r: 90deg; --delay: .3s; }
+    .demo-arrow.left { --x: -238px; --y: -18px; --r: 180deg; --delay: .45s; }
+    .demo-arrow.diagonal { --x: 178px; --y: 170px; --r: 45deg; --delay: .6s; color: var(--orange); }
 
     @keyframes arrowNudge {
       0%, 100% { margin-left: 0; opacity: .58; }
@@ -483,63 +470,6 @@
     @keyframes arrowColor {
       0%, 100% { filter: drop-shadow(0 10px 18px rgba(0, 191, 232, .2)); }
       50% { filter: drop-shadow(0 10px 28px rgba(30, 85, 255, .42)); }
-    }
-
-    .arrow-label {
-      position: absolute;
-      z-index: 6;
-      left: 50%;
-      top: 50%;
-      min-height: 32px;
-      display: inline-flex;
-      align-items: center;
-      padding: 0 11px;
-      border: 1px solid rgba(0, 116, 170, .18);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .92);
-      color: #183248;
-      font: 800 .62rem/1 "IBM Plex Mono", monospace;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      box-shadow: 0 12px 30px rgba(43, 92, 124, .12);
-      transform: translate(-50%, -50%) translate(var(--x), var(--y));
-      animation: labelPulse 4s ease-in-out infinite;
-    }
-
-    .arrow-label.up { --x: 0px; --y: -118px; }
-    .arrow-label.right { --x: 156px; --y: 68px; }
-    .arrow-label.down { --x: -10px; --y: 118px; }
-    .arrow-label.left { --x: -156px; --y: 68px; }
-    .arrow-label.diagonal { --x: 132px; --y: 112px; }
-
-    @keyframes labelPulse {
-      0%, 100% { border-color: rgba(0, 116, 170, .18); background: rgba(255, 255, 255, .92); }
-      50% { border-color: rgba(0, 191, 232, .52); background: rgba(238, 250, 255, .98); }
-    }
-
-    .value-tag {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 0 12px;
-      border: 1px solid rgba(0, 116, 170, .22);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .9);
-      color: var(--blue);
-      font: 800 .68rem/1 "IBM Plex Mono", monospace;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transform: translate(-50%, calc(-50% + 142px));
-      box-shadow: 0 14px 36px rgba(43, 92, 124, .14);
-      animation: previewPulse 2.4s ease-in-out infinite;
-    }
-
-    @keyframes previewPulse {
-      0%, 100% { color: var(--blue); box-shadow: 0 14px 36px rgba(43, 92, 124, .14); }
-      50% { color: var(--cyan2); box-shadow: 0 16px 44px rgba(0, 191, 232, .24); }
     }
 
     .operation-stack {
@@ -881,27 +811,7 @@
       }
 
       .demo-cube {
-        width: 142px;
-        height: 142px;
-      }
-
-      .cube-face.front {
-        width: 106px;
-        height: 106px;
-      }
-
-      .cube-face.right {
-        left: calc(50% + 53px);
-        top: calc(50% - 53px);
-        width: 42px;
-        height: 106px;
-      }
-
-      .cube-face.top {
-        left: calc(50% - 53px);
-        top: calc(50% - 95px);
-        width: 106px;
-        height: 42px;
+        --cube-size: 106px;
       }
 
       .demo-arrow {
@@ -910,23 +820,16 @@
         font-size: 38px;
       }
 
-      .demo-arrow.up { --x: 0px; --y: -140px; }
-      .demo-arrow.right { --x: 126px; --y: -12px; }
-      .demo-arrow.down { --x: 0px; --y: 140px; }
-      .demo-arrow.left { --x: -126px; --y: -12px; }
-      .demo-arrow.diagonal { --x: 94px; --y: 116px; }
+      .demo-arrow.up { --x: 0px; --y: -158px; }
+      .demo-arrow.right { --x: 146px; --y: -14px; }
+      .demo-arrow.down { --x: 0px; --y: 158px; }
+      .demo-arrow.left { --x: -154px; --y: -14px; }
+      .demo-arrow.diagonal { --x: 112px; --y: 128px; }
 
-      .arrow-label {
-        min-height: 28px;
-        padding: 0 8px;
-        font-size: .52rem;
+      @keyframes arrowNudge {
+        0%, 100% { margin-left: 0; opacity: .58; }
+        50% { margin-left: 14px; opacity: 1; }
       }
-
-      .arrow-label.up { --x: 0px; --y: -88px; }
-      .arrow-label.right { --x: 88px; --y: 50px; }
-      .arrow-label.down { --x: 0px; --y: 96px; }
-      .arrow-label.left { --x: -90px; --y: 50px; }
-      .arrow-label.diagonal { --x: 78px; --y: 90px; }
 
       .operation-stack {
         grid-template-columns: 1fr;
@@ -1000,7 +903,7 @@
           <h2>One-hand mesh modeling.</h2>
           <p class="lede">
             Select geometry. Drag from the selection. Release to apply. Gesture Mesh turns simple mouse gestures into fast
-            extrude, inset, and bevel operations inside Blender.
+            extrude, inset, and bevel operations inside Blender. No keyboard shortcuts required: just move the mouse.
           </p>
           <div class="chips" aria-label="GestureMesh feature highlights">
             <span class="chip">Extrude</span>
@@ -1040,24 +943,18 @@
             <div class="demo-arrow down"><span>➜</span></div>
             <div class="demo-arrow left"><span>➜</span></div>
             <div class="demo-arrow diagonal"><span>➜</span></div>
-            <div class="arrow-label up">Up: Extrude</div>
-            <div class="arrow-label right">Right: Individual Inset</div>
-            <div class="arrow-label down">Down: Extrude</div>
-            <div class="arrow-label left">Left: Region Inset</div>
-            <div class="arrow-label diagonal">Diagonal: Bevel</div>
-            <div class="value-tag">Live Preview</div>
           </div>
           <div class="operation-stack">
             <div class="op">
-              <small>Up / Down</small>
+              <small>Mouse drag up / down</small>
               <strong>Extrude</strong>
             </div>
             <div class="op">
-              <small>Left / Right</small>
+              <small>Mouse drag left / right</small>
               <strong>Inset</strong>
             </div>
             <div class="op">
-              <small>Diagonal</small>
+              <small>Mouse drag diagonal</small>
               <strong>Bevel</strong>
             </div>
           </div>
@@ -1217,7 +1114,7 @@
   </main>
 
   <footer>
-    <div class="wrap">GestureMesh / NoiseBee / Blender Edit Mode Add-on</div>
+    <div class="wrap">GestureMesh / NoiseBee /</div>
   </footer>
 </body>
 </html>
